@@ -1,0 +1,83 @@
+#include "folders.h"
+
+Folders::Folders(QString baseUrl, QObject *parent) :
+    QObject(parent)
+{
+    m_baseUrl = baseUrl + "sc/fs/api/v2/folders/";
+    m_request = new NetworkRequest();
+}
+
+void Folders::setToken(const QString &token)
+{
+    if (!token.isEmpty() && !token.isNull())
+    {
+        m_token = token;
+    }
+}
+
+void Folders::folderCreate(const QString &path)
+{
+    Q_ASSERT(!path.isEmpty());
+    QUrl url = m_baseUrl + path;
+    QByteArray body;
+    if (!m_token.isNull())
+    {
+        m_request->postRequest(url, body, m_token);
+        disconnect(m_request, &NetworkRequest::replyGet, this, &Folders::folderReadDone);
+        disconnect(m_request, &NetworkRequest::replyPut, this, &Folders::folderReadDone);
+        disconnect(m_request, &NetworkRequest::replyDelete, this, &Folders::folderDeleteDone);
+
+        connect(m_request, &NetworkRequest::replyPost, this, &Folders::folderCreateDone);
+    }
+}
+
+void Folders::folderRead(const QString &path)
+{
+    Q_ASSERT(!path.isEmpty());
+    QUrl url = m_baseUrl + path;
+
+    if (!m_token.isNull())
+    {
+        m_request->getRequest(url, m_token);
+        disconnect(m_request, &NetworkRequest::replyPut, this, &Folders::folderReadDone);
+        disconnect(m_request, &NetworkRequest::replyDelete, this, &Folders::folderDeleteDone);
+        disconnect(m_request, &NetworkRequest::replyPost, this, &Folders::folderCreateDone);
+
+        connect(m_request, &NetworkRequest::replyGet, this, &Folders::folderReadDone);
+    }
+}
+
+void Folders::folderRename(const QString &path, const QJsonDocument &payload)
+{
+    Q_ASSERT(!path.isEmpty());
+    Q_ASSERT(!payload.isEmpty());
+    QUrl url = m_baseUrl + path;
+
+    if (!m_token.isNull())
+    {
+        qDebug() << "Rename folder" << url << payload.toJson();
+        m_request->putRequest(url, payload.toJson(), m_token);
+        disconnect(m_request, &NetworkRequest::replyDelete, this, &Folders::folderDeleteDone);
+        disconnect(m_request, &NetworkRequest::replyPost, this, &Folders::folderCreateDone);
+        disconnect(m_request, &NetworkRequest::replyGet, this, &Folders::folderReadDone);
+
+        connect(m_request, &NetworkRequest::replyPut, this, &Folders::folderRenameDone);
+    }
+
+}
+
+void Folders::folderDelete(const QString &path)
+{
+    Q_ASSERT(!path.isEmpty());
+    QUrl url = m_baseUrl + path;
+
+    if (!m_token.isNull())
+    {
+        m_request->deleteRequest(url, m_token);
+        disconnect(m_request, &NetworkRequest::replyPost, this, &Folders::folderCreateDone);
+        disconnect(m_request, &NetworkRequest::replyGet, this, &Folders::folderReadDone);
+        disconnect(m_request, &NetworkRequest::replyPut, this, &Folders::folderRenameDone);
+
+        connect(m_request, &NetworkRequest::replyDelete, this, &Folders::folderDeleteDone);
+    }
+}
