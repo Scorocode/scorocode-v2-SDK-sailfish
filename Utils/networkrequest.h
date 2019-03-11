@@ -17,7 +17,6 @@ public:
 
     void getRequest(const QUrl url, const QString &token = nullptr);
     void postRequest(const QUrl url, const QByteArray body, const QString &token = nullptr);
-    void postRequest(const QUrl url, QIODevice *data, const QString &token = nullptr);
     void putRequest(const QUrl url, const QByteArray data, const QString &token = nullptr);
     void deleteRequest(const QUrl url, const QString &token = nullptr);
 

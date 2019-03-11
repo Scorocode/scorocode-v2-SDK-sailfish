@@ -1,4 +1,8 @@
 #include "networkrequest.h"
+#include <QHttpPart>
+#include <QFile>
+#include <QMimeDatabase>
+#include <QMimeType>
 #include <QDebug>
 
 NetworkRequest::NetworkRequest(QObject *parent) : QObject(parent)
@@ -30,30 +34,10 @@ void NetworkRequest::getRequest(const QUrl url, const QString &token)
 
 void NetworkRequest::postRequest(const QUrl url, const QByteArray body, const QString &token)
 {
-    qDebug() << url;
+    qDebug() << url << "body" << body;
     QNetworkRequest request(url);
-    if (url.toString().contains("files"))
-    {
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-    }
-    else
-    {
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    }
-    request.setRawHeader("accept", "application/json");
-    if (!token.isNull())
-    {
-        QString t = "Bearer ";
-        t += token;
-        request.setRawHeader("Authorization", t.toUtf8());
-    }
-    manager->post(request, body);
-}
 
-void NetworkRequest::postRequest(const QUrl url, QIODevice *data, const QString &token)
-{
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     request.setRawHeader("accept", "application/json");
     if (!token.isNull())
     {
@@ -61,7 +45,8 @@ void NetworkRequest::postRequest(const QUrl url, QIODevice *data, const QString 
         t += token;
         request.setRawHeader("Authorization", t.toUtf8());
     }
-    manager->post(request, data);
+    qDebug() << "Headers" << request.rawHeaderList().toVector();
+    manager->post(request, body);
 }
 
 void NetworkRequest::putRequest(const QUrl url, const QByteArray data, const QString &token)

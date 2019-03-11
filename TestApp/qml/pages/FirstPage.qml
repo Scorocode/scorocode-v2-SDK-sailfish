@@ -16,6 +16,10 @@ Page {
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
         PullDownMenu {
             MenuItem {
+                text: qsTr("Websocket")
+                onClicked: pageStack.push(Qt.resolvedUrl("WebSocket.qml"), {p: proxy})
+            }
+            MenuItem {
                 text: qsTr("Database")
                 onClicked: pageStack.push(Qt.resolvedUrl("DatabaseCheck.qml"), {p: proxy})
             }

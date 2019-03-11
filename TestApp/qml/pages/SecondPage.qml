@@ -160,7 +160,7 @@ Page {
         Component {
             id: filePickerPage
             FilePickerPage {
-                nameFilters: [ '*.txt', '*.log' ]
+                nameFilters: [ '*.*' ]
                 onSelectedContentPropertiesChanged: {
                     internal.selectedFile = selectedContentProperties.filePath
                 }

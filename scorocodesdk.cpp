@@ -1,5 +1,7 @@
 #include "scorocodesdk.h"
+#include "Utils/logger.h"
 
+#include <QSslConfiguration>
 #include <QJsonObject>
 #include <QJsonValue>
 
@@ -9,6 +11,8 @@ ScorocodeSDK *ScorocodeSDK::initApp(const QString &appId, const QSslConfiguratio
 {
     if (!m_instance)
     {
+//        qDebug() << "Logger instanace";
+//        logger::initLogging();
         m_instance = new ScorocodeSDK(appId, configuration);
     }
 
@@ -22,8 +26,22 @@ ScorocodeSDK::ScorocodeSDK(const QString appId, const QSslConfiguration &configu
     qputenv("QT_LOGGING_TO_CONSOLE", QByteArray("0"));
 
     m_sslConfiguration = new QSslConfiguration(configuration);
+
     m_baseUrl += m_appId + ".v2.scorocode.ru/";
 //     m_baseUrl += m_appId + ".lorus.prof-itgroup.ru/";
+    if (!m_socket)
+    {
+        QUrl url = "wss://ws-" + m_appId + ".v2.scorocode.ru";
+//        QUrl url = QString::fromLatin1("wss://echo.websocket.org");
+        m_socket = new WebSocket(url);
+
+        connect(m_socket, &WebSocket::socketConnected, [](QJsonDocument message){
+            qDebug().noquote() << "Connected" << message.toJson();
+        });
+        connect(m_socket, &WebSocket::messageReceived, [](QJsonDocument message){
+            qDebug().noquote() << "Message" << message.toJson();
+        });
+    }
 }
 
 Auth *ScorocodeSDK::auth()
@@ -66,6 +84,11 @@ Folders *ScorocodeSDK::folders()
     }
 
     return m_folders;
+}
+
+WebSocket *ScorocodeSDK::websocket()
+{
+    return m_socket;
 }
 
 void ScorocodeSDK::tokenTimer(int errorCode, QJsonDocument data)

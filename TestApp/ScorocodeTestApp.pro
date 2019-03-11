@@ -35,7 +35,8 @@ DISTFILES += qml/ScorocodeTestApp.qml \
     rpm/ScorocodeTestApp.yaml \
     translations/*.ts \
     ScorocodeTestApp.desktop \
-    qml/pages/DatabaseCheck.qml
+    qml/pages/DatabaseCheck.qml \
+    qml/pages/WebSocket.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 

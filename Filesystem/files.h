@@ -3,7 +3,8 @@
 #include <QObject>
 #include <QFile>
 
-#include "../Utils/networkrequest.h"
+#include "Utils/networkrequest.h"
+#include "Utils/filemanager.h"
 
 class Files : public QObject
 {
@@ -39,17 +40,26 @@ public:
      */
     void fileDelete(const QString &path);
 
+    enum class FileError
+    {
+        NoError = 0,
+        PathIsEmpty,
+        FileNameIsEmpty
+    };
+
 signals:
     void fileDownloadDone(int errorCode, QJsonDocument data);
     void fileUploadDone(int errorCode, QJsonDocument data);
     void fileRenameDone(int errorCode, QJsonDocument data);
     void fileDeleteDone(int errorCode, QJsonDocument data);
+    void fileRequestError(Files::FileError errorCode);
 
 public slots:
 
 private:
     QString m_baseUrl;
     NetworkRequest *m_request;
+    FileManager *m_fileManager;
     QFile *file;
     QString m_token;
 };

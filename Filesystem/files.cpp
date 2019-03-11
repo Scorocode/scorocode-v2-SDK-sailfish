@@ -10,6 +10,7 @@ Files::Files(QString baseUrl, QObject *parent) :
 {
     m_baseUrl = baseUrl + "sc/fs/api/v2/files/";
     m_request = new NetworkRequest();
+    m_fileManager = new FileManager();
 }
 
 void Files::setToken(const QString &token)
@@ -22,49 +23,41 @@ void Files::setToken(const QString &token)
 
 void Files::fileUpload(const QString &path, const QString &fileName)
 {
-    Q_ASSERT(!path.isEmpty());
+    if (path.isEmpty())
+    {
+        emit fileRequestError(Files::FileError::PathIsEmpty);
+        return;
+    }
+    if (fileName.isEmpty())
+    {
+        emit fileRequestError(Files::FileError::FileNameIsEmpty);
+        return;
+    }
 
     if (!m_token.isNull())
     {
-        file = new QFile(path);
-        file->open(QIODevice::ReadOnly);
         QUrl url = m_baseUrl + fileName;
-
-
-        QByteArray ba;
-//        QBuffer buffer( &ba );
-//        buffer.open(QBuffer::ReadWrite);
-        ba.append(file->readAll());
-        QJsonObject tmp;
-        QString str = "test test test";
-        tmp.insert("file", QJsonValue::fromVariant(str.toUtf8().toBase64()));
-//        QJsonDocument payload(tmp);
-
-        file->close();
-        delete file;
 
         qDebug() << "Upload url" << url << "File" << fileName;
 
-        m_request->postRequest(url, str.toUtf8().toBase64()/*payload.toJson()*/, m_token);
-        connect(m_request, &NetworkRequest::replyPost, this, &Files::fileUploadDone);
-//        connect(m_request, &NetworkRequest::replyPost, this, [this](int errorCode, QJsonDocument data){
-//            Q_UNUSED(data);
-//            qDebug() << "Delete tmp file" << errorCode;
-//            if (0 == errorCode)
-//            {
-//                delete this->file;
-//            }
-//        });
-//        connect(m_request, &NetworkRequest::error, this, [this](int errorCode){
-//            qDebug() << "Delete tmp file" << errorCode;
-//            delete this->file;
-//        });
+        m_fileManager->fileUpload(url,path, m_token);
+//        m_request->fileUpload(url, path/*payload.toJson()*/, m_token);
+//        connect(m_request, &NetworkRequest::replyPost, this, &Files::fileUploadDone);
     }
 }
 
 void Files::fileRename(const QString &path, const QString &fileName)
 {
-    Q_ASSERT(!path.isEmpty());
+    if (path.isEmpty())
+    {
+        emit fileRequestError(Files::FileError::PathIsEmpty);
+        return;
+    }
+    if (fileName.isEmpty())
+    {
+        emit fileRequestError(Files::FileError::FileNameIsEmpty);
+        return;
+    }
     if (!m_token.isNull())
     {
         QUrl url = m_baseUrl + path;
@@ -80,18 +73,28 @@ void Files::fileRename(const QString &path, const QString &fileName)
 
 void Files::fileDownload(const QString &path)
 {
-    Q_ASSERT(!path.isEmpty());
+    if (path.isEmpty())
+    {
+        emit fileRequestError(Files::FileError::PathIsEmpty);
+        return;
+    }
     if (!m_token.isNull())
     {
         QUrl url = m_baseUrl + path;
-        m_request->getRequest(url, m_token);
-        connect(m_request, &NetworkRequest::replyGet, this, &Files::fileDownloadDone);
+        m_fileManager->fileDownload(url, m_token);
+        connect(m_fileManager, &FileManager::updateBytesReceived, this, [](qint64 bytesReceived, qint64 bytesTotal){
+            qDebug() << "Received" << bytesReceived << "from" << bytesTotal;
+        });
     }
 }
 
 void Files::fileDelete(const QString &path)
 {
-    Q_ASSERT(!path.isEmpty());
+    if (path.isEmpty())
+    {
+        emit fileRequestError(Files::FileError::PathIsEmpty);
+        return;
+    }
 
     if (!m_token.isNull())
     {

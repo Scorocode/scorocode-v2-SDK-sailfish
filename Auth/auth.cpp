@@ -17,15 +17,27 @@ Auth::Auth(QString baseUrl, QObject *parent) :
 
 void Auth::signin(const QString &email, const QString &password)
 {
+    if (email.isEmpty())
+    {
+        emit authError(Auth::AuthError::EmailIsEmpty);
+        return;
+    }
+    if (password.isEmpty())
+    {
+        emit authError(Auth::AuthError::PasswordIsEmpty);
+        return;
+    }
     qDebug() << "email" << email << "pass" << password;
-    Q_ASSERT(!email.isEmpty());
-    Q_ASSERT(!password.isEmpty());
 
     QRegExp mailREX("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b");
     mailREX.setCaseSensitivity(Qt::CaseInsensitive);
     mailREX.setPatternSyntax(QRegExp::RegExp);
 
-    Q_ASSERT(mailREX.exactMatch(email));
+    if (!mailREX.exactMatch(email))
+    {
+        emit authError(Auth::AuthError::EmailFormatError);
+        return;
+    }
 
     QUrl url = m_baseUrl + "signin";
 
@@ -49,13 +61,25 @@ void Auth::signin(const QString &email, const QString &password)
 
 void Auth::signup(const QString &email, const QString &password)
 {
-    Q_ASSERT(!email.isEmpty());
-    Q_ASSERT(!password.isEmpty());
+    if (email.isEmpty())
+    {
+        emit authError(Auth::AuthError::EmailIsEmpty);
+        return;
+    }
+    if (password.isEmpty())
+    {
+        emit authError(Auth::AuthError::PasswordIsEmpty);
+        return;
+    }
     QRegExp mailREX("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b");
     mailREX.setCaseSensitivity(Qt::CaseInsensitive);
     mailREX.setPatternSyntax(QRegExp::RegExp);
 
-    Q_ASSERT(mailREX.exactMatch(email));
+    if (!mailREX.exactMatch(email))
+    {
+        emit authError(Auth::AuthError::EmailFormatError);
+        return;
+    }
     QUrl url = m_baseUrl + "signup";
 
     QJsonObject tmp;
@@ -74,7 +98,11 @@ void Auth::signup(const QString &email, const QString &password)
 
 void Auth::signout(const QString &token)
 {
-    Q_ASSERT(!token.isEmpty());
+    if (token.isEmpty())
+    {
+        emit authError(Auth::AuthError::TokenIsEmpty);
+        return;
+    }
 
     QUrl url = m_baseUrl + "signout";
     QJsonObject tmp;
@@ -92,9 +120,13 @@ void Auth::signout(const QString &token)
 
 void Auth::refreshSession(const QString &token)
 {
-    Q_ASSERT(!token.isEmpty());
+    if (token.isEmpty())
+    {
+        emit authError(Auth::AuthError::TokenIsEmpty);
+        return;
+    }
 
-    QUrl url = m_baseUrl + "verify";
+    QUrl url = m_baseUrl + "refresh";
     QJsonObject tmp;
     tmp.insert("token", token);
     QJsonDocument body(tmp);
@@ -110,7 +142,11 @@ void Auth::refreshSession(const QString &token)
 
 void Auth::getUser(const QString &token)
 {
-    Q_ASSERT(!token.isEmpty());
+    if (token.isEmpty())
+    {
+        emit authError(Auth::AuthError::TokenIsEmpty);
+        return;
+    }
 
     QUrl url = m_baseUrl + "userinfo";
     QJsonObject tmp;
@@ -128,7 +164,11 @@ void Auth::getUser(const QString &token)
 
 void Auth::confirmEmail(const QString &verificationCode)
 {
-    Q_ASSERT(!verificationCode.isEmpty());
+    if (verificationCode.isEmpty())
+    {
+        emit authError(Auth::AuthError::VerificationcodeIsEmpty);
+        return;
+    }
 
     QUrl url = m_baseUrl + "verify";
     QJsonObject tmp;

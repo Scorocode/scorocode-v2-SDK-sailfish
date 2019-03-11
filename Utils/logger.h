@@ -3,18 +3,12 @@
 #include <QObject>
 #include <QMessageLogger>
 
-class Logger : public QObject
-{
-    Q_OBJECT
-public:
-    explicit Logger(QObject *parent = nullptr);
+namespace logger {
 
-    Logger(const Logger&) = delete;
-    Logger operator =(const Logger&) = delete;
+const QString defaultLogFolder = "/home/nemo/";
 
-signals:
-
-public slots:
-};
+bool initLogging();
+void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString& msg);
+}
 
 // LOGGER_H

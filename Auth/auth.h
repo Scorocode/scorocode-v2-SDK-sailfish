@@ -49,6 +49,16 @@ public:
      */
     void confirmEmail(const QString &verificationCode);
 
+    enum class AuthError
+    {
+        NoError = 0,
+        EmailIsEmpty,
+        PasswordIsEmpty,
+        EmailFormatError,
+        TokenIsEmpty,
+        VerificationcodeIsEmpty
+    };
+
 signals:
     void signinDone(int errorCode, QJsonDocument data);
     void signupDone(int errorCode, QJsonDocument data);
@@ -56,6 +66,7 @@ signals:
     void refreshSessionDone(int errorCode, QJsonDocument data);
     void getUserDone(int errorCode, QJsonDocument data);
     void confirmEmailDone(int errorCode, QJsonDocument data);
+    void authError(Auth::AuthError errorCode);
     void networkError(int errorCode);
 
 public slots:

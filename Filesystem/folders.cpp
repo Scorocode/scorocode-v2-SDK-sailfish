@@ -1,4 +1,5 @@
 #include "folders.h"
+#include <QJsonObject>
 
 Folders::Folders(QString baseUrl, QObject *parent) :
     QObject(parent)
@@ -17,7 +18,12 @@ void Folders::setToken(const QString &token)
 
 void Folders::folderCreate(const QString &path)
 {
-    Q_ASSERT(!path.isEmpty());
+    if (path.isEmpty())
+    {
+        emit folderRequestError(Folders::FolderError::PathIsEmpty);
+        return;
+    }
+
     QUrl url = m_baseUrl + path;
     QByteArray body;
     if (!m_token.isNull())
@@ -33,7 +39,12 @@ void Folders::folderCreate(const QString &path)
 
 void Folders::folderRead(const QString &path)
 {
-    Q_ASSERT(!path.isEmpty());
+    if (path.isEmpty())
+    {
+        emit folderRequestError(Folders::FolderError::PathIsEmpty);
+        return;
+    }
+
     QUrl url = m_baseUrl + path;
 
     if (!m_token.isNull())
@@ -47,15 +58,27 @@ void Folders::folderRead(const QString &path)
     }
 }
 
-void Folders::folderRename(const QString &path, const QJsonDocument &payload)
+void Folders::folderRename(const QString &path, const QString &newFolderName)
 {
-    Q_ASSERT(!path.isEmpty());
-    Q_ASSERT(!payload.isEmpty());
+    if (path.isEmpty())
+    {
+        emit folderRequestError(Folders::FolderError::PathIsEmpty);
+        return;
+    }
+    if (newFolderName.isEmpty())
+    {
+        emit folderRequestError(Folders::FolderError::FolderNameIsEmpty);
+        return;
+    }
+
     QUrl url = m_baseUrl + path;
 
     if (!m_token.isNull())
     {
-        qDebug() << "Rename folder" << url << payload.toJson();
+        QJsonObject tmp;
+        tmp.insert("newPath", newFolderName);
+        QJsonDocument payload(tmp);
+        qDebug() << "Rename folder" << url << newFolderName;
         m_request->putRequest(url, payload.toJson(), m_token);
         disconnect(m_request, &NetworkRequest::replyDelete, this, &Folders::folderDeleteDone);
         disconnect(m_request, &NetworkRequest::replyPost, this, &Folders::folderCreateDone);
@@ -68,7 +91,12 @@ void Folders::folderRename(const QString &path, const QJsonDocument &payload)
 
 void Folders::folderDelete(const QString &path)
 {
-    Q_ASSERT(!path.isEmpty());
+    if (path.isEmpty())
+    {
+        emit folderRequestError(Folders::FolderError::PathIsEmpty);
+        return;
+    }
+
     QUrl url = m_baseUrl + path;
 
     if (!m_token.isNull())

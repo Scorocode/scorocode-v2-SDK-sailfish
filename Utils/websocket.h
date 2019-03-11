@@ -2,6 +2,10 @@
 
 #include <QObject>
 #include <QtWebSockets/QWebSocket>
+#include <QAbstractSocket>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
 
 class WebSocket : public QObject
 {
@@ -13,8 +17,12 @@ public:
     void off(const QString &eventName);
     void once(const QString &eventName);
 
+    ~WebSocket();
+
 Q_SIGNALS:
     void closed();
+    void socketConnected(QJsonDocument message);
+    void messageReceived(QJsonDocument message);
 
 private Q_SLOTS:
     void onConnected();

@@ -11,10 +11,6 @@
 <context>
     <name>DatabaseCheck</name>
     <message>
-        <source>Upload file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Database check</source>
         <translation type="unfinished"></translation>
     </message>
@@ -37,6 +33,10 @@
         <source>Database</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Websocket</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SecondPage</name>
@@ -46,6 +46,13 @@
     </message>
     <message>
         <source>Files/Folders</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WebSocket</name>
+    <message>
+        <source>Websocket check</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

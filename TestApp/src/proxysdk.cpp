@@ -5,7 +5,8 @@
 
 ProxySDK::ProxySDK(QObject *parent) : QObject(parent)
 {
-    sdk = ScorocodeSDK::initApp("/*Application ID*/", m_sslConfig);
+// Set AppId
+    sdk = ScorocodeSDK::initApp("AppId", m_sslConfig);
     if (sdk)
     {
         init();
@@ -22,11 +23,9 @@ ProxySDK::~ProxySDK()
 
 void ProxySDK::singin()
 {
-    QString user = ""; //Log in name
-    QString pass = ""; //User password
-    qDebug() << "user" << user << "pass" << pass;
+    QString user = "email@email.com";
+    QString pass = "password";
     auth->signin(user, pass);
-    qDebug() << "Make connect";
     m_singing = true;
     emit singingChanged(m_singing);
     connect(auth, &Auth::signinDone, this, &ProxySDK::singinDone);
@@ -34,11 +33,9 @@ void ProxySDK::singin()
 
 void ProxySDK::singup()
 {
-    QString user = "anenash@gmail.com";
+    QString user = "email@email.com";
     QString pass = "password";
-    qDebug() << "user" << user << "pass" << pass;
     auth->signup(user, pass);
-    qDebug() << "User singup";
     m_singing = true;
     emit singingChanged(m_singing);
     connect(auth, &Auth::signupDone, this, &ProxySDK::singinDone);
@@ -146,10 +143,8 @@ void ProxySDK::renameDirectoryPath(const QString folderName, const QString newFo
     if (!m_token.isNull())
     {
         qDebug() << "newPath" << folderName;
-        QJsonObject tmp;
-        tmp.insert("newPath", newFolderName);
-        QJsonDocument payload(tmp);
-        folders->folderRename(folderName, payload);
+
+        folders->folderRename(folderName, newFolderName);
         connect(folders, &Folders::folderRenameDone, this, [this](int errorCode, QJsonDocument data){
             qDebug().noquote() << "error code" << errorCode << data.toJson();
         });
@@ -169,12 +164,19 @@ void ProxySDK::deleteDirectory(const QString folderName)
     }
 }
 
-void ProxySDK::getRecordList(const QString &type, const QString &db_name, const QString &schema, const QString &table)
+void ProxySDK::getRecordList(const QString &type, const QString &db_name, const QString &schema, const QString &table/*, QVariantMap<QString, QString> additional*/)
 {
     qDebug() << "get record: db type" << type << "name" << db_name << "schema name" << schema << "table name" << table;
     if (!m_token.isNull())
     {
-        database->getRecordList(type, db_name, schema, table);
+//        if(additional)
+//        {
+//            database->getRecordList(type, db_name, schema, table, additional);
+//        }
+//        else
+//        {
+            database->getRecordList(type, db_name, schema, table);
+//        }
         connect(database, &Database::getRecordListDone, this, [this](int errorCode, QJsonDocument data){
             qDebug().noquote() << "error code" << errorCode << data.toJson();
         });
@@ -183,7 +185,7 @@ void ProxySDK::getRecordList(const QString &type, const QString &db_name, const 
 
 void ProxySDK::getRecordById(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &record_id)
 {
-    qDebug() << "get record: db type" << type << "name" << db_name << "schema name" << schema << "table name" << table;
+    qDebug() << "get record: db type" << type << "name" << db_name << "schema name" << schema << "table name" << table << "record_id" << record_id;
     if (!m_token.isNull())
     {
         database->getRecordById(type, db_name, schema, table, record_id);
@@ -193,9 +195,9 @@ void ProxySDK::getRecordById(const QString &type, const QString &db_name, const 
     }
 }
 
-void ProxySDK::insertRecord(const QString &type, const QString &db_name, const QString &schema, const QString &table, QJsonDocument payload)
+void ProxySDK::insertRecord(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString & payload)
 {
-    qDebug() << "insert record: db type" << type << "name" << db_name << "schema name" << schema << "table name" << table << "payload" << payload.toJson();
+    qDebug() << "insert record: db type" << type << "name" << db_name << "schema name" << schema << "table name" << table << "payload" << payload;
     if (!m_token.isNull())
     {
         database->insertRecord(type, db_name, schema, table, payload);
@@ -205,9 +207,9 @@ void ProxySDK::insertRecord(const QString &type, const QString &db_name, const Q
     }
 }
 
-void ProxySDK::updateRecord(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &record_id, QJsonDocument payload)
+void ProxySDK::updateRecord(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &record_id, const QString &payload)
 {
-    qDebug() << "update record: db type" << type << "name" << db_name << "schema name" << schema << "table name" << table << "payload" << payload.toJson();
+    qDebug() << "update record: db type" << type << "name" << db_name << "schema name" << schema << "table name" << table << "record_id" << record_id << "payload" << payload;
     if (!m_token.isNull())
     {
         database->updateRecord(type, db_name, schema, table, record_id, payload);
@@ -229,6 +231,21 @@ void ProxySDK::deleteRecord(const QString &type, const QString &db_name, const Q
     }
 }
 
+void ProxySDK::on(const QString &command)
+{
+    websocket->on(command);
+}
+
+void ProxySDK::off(const QString &command)
+{
+    websocket->off(command);
+}
+
+void ProxySDK::once(const QString &command)
+{
+    websocket->once(command);
+}
+
 void ProxySDK::singinDone(int errorCode, QJsonDocument data)
 {
     qDebug().noquote() << errorCode << data.toJson();
@@ -237,6 +254,7 @@ void ProxySDK::singinDone(int errorCode, QJsonDocument data)
         QJsonObject object = data.object();
         qDebug().noquote() << object.keys();
         m_token = object.value("token").toString();
+        qDebug() << "got token" << m_token;
         m_singing = false;
         folders->setToken(m_token);
         files->setToken(m_token);
@@ -252,10 +270,22 @@ void ProxySDK::init()
     database = sdk->database();
     files = sdk->files();
     folders = sdk->folders();
+    websocket = sdk->websocket();
 
     connect(sdk, &ScorocodeSDK::networkError, this, [this](int errorCode){
         qDebug() << "error code" << errorCode;
         m_singing = false;
         emit singingChanged(m_singing);
+    });
+
+    connect(websocket, &WebSocket::messageReceived, this, [this](QJsonDocument message){
+        QString data = message.toJson();
+        m_websocketMessage = data;
+        emit websocketMessageChanged(data);
+    });
+    connect(websocket, &WebSocket::socketConnected, this, [this](QJsonDocument message){
+        QString data = message.toJson();
+        m_websocketMessage = data;
+        emit websocketMessageChanged(data);
     });
 }

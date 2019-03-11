@@ -22,6 +22,16 @@ public:
     void getRecordList(const QString &type, const QString &db_name, const QString &schema, const QString &table);
 
     /*!
+     * \brief getRecordList
+     * \param type
+     * \param db_name
+     * \param schema
+     * \param table
+     * \param additional
+     */
+    void getRecordList(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QStringList &additional);
+
+    /*!
      * \brief getRecordById
      * \param type
      * \param db_name
@@ -39,7 +49,7 @@ public:
      * \param table
      * \param payload
      */
-    void insertRecord(const QString &type, const QString &db_name, const QString &schema, const QString &table, QJsonDocument payload);
+    void insertRecord(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &payload);
 
     /*!
      * \brief updateRecord
@@ -50,7 +60,7 @@ public:
      * \param record_id
      * \param payload
      */
-    void updateRecord(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &record_id, QJsonDocument payload);
+    void updateRecord(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &record_id, const QString &payload);
 
     /*!
      * \brief deleteRecord
@@ -62,12 +72,24 @@ public:
      */
     void deleteRecord(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &record_id);
 
+    enum class DatabaseError
+    {
+        NoError = 0,
+        TypeIsEmpty,
+        DbNameIsEmpty,
+        SchemaIsEmpty,
+        TableNameIsEmpty,
+        RecordIdIsEmpty,
+        PayloadIsEmpty
+    };
+
 signals:
     void getRecordListDone(int errorCode, QJsonDocument data);
     void getRecordByIdDone(int errorCode, QJsonDocument data);
     void insertRecordDone(int errorCode, QJsonDocument data);
     void updateRecordDone(int errorCode, QJsonDocument data);
     void deleteRecordDone(int errorCode, QJsonDocument data);
+    void DbRequestError(Database::DatabaseError errorCode);
 
 private:
     QString m_baseUrl;

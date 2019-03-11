@@ -30,7 +30,7 @@ public:
      * \param path
      * \param payload
      */
-    void folderRename(const QString &path, const QJsonDocument &payload);
+    void folderRename(const QString &path, const QString &newFolderName);
 
     /*!
      * \brief folderDelete
@@ -38,11 +38,19 @@ public:
      */
     void folderDelete(const QString &path);
 
+    enum class FolderError
+    {
+        NoError = 0,
+        PathIsEmpty,
+        FolderNameIsEmpty
+    };
+
 signals:
     void folderReadDone(int errorCode, QJsonDocument data);
     void folderCreateDone(int errorCode, QJsonDocument data);
     void folderRenameDone(int errorCode, QJsonDocument data);
     void folderDeleteDone(int errorCode, QJsonDocument data);
+    void folderRequestError(Folders::FolderError errorCode);
 
 private:
     QString m_baseUrl;
