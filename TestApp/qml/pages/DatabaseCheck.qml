@@ -69,31 +69,6 @@ Page {
                 width: parent.width
                 placeholderText: "table values"
             }
-            Row {
-                width: parent.width
-                spacing: Theme.paddingMedium
-
-                TextField {
-                    id: additional
-                    width: parent.width * 0.5
-                    placeholderText: "fiters"
-                }
-
-                TextField {
-                    id: additionalValue
-                    width: parent.width * 0.5
-                    placeholderText: "fiters"
-                }
-            }
-
-            Button {
-                enabled: additional.text.length > 0 && additionalValue.text.length > 0
-                text: "Append params"
-                onClicked: {
-                    console.log("payload", recordPayload.text)
-                    p.insertRecord(dbType.text, dbName.text, dbSchema.text, tableName.text, recordPayload.text)
-                }
-            }
 
 
             Row {
@@ -101,6 +76,7 @@ Page {
                 spacing: Theme.paddingMedium
                 Button {
                     enabled: recordPayload.text.length > 0 && isDataSet()
+                    width: parent.width * 0.3
                     text: "Insert"
                     onClicked: {
                         console.log("payload", recordPayload.text)
@@ -110,6 +86,7 @@ Page {
                 Button {
                     enabled: recordPayload.text.length > 0 && isDataSet()
                     text: "Get data 1"
+                    width: parent.width * 0.3
                     onClicked: {
                         console.log("payload", recordPayload.text)
                         p.getRecordList(dbType.text, dbName.text, dbSchema.text, tableName.text, recordPayload.text)
@@ -118,6 +95,7 @@ Page {
                 Button {
                     enabled: recordPayload.text.length > 0 && isDataSet() && recordId.text.length > 0
                     text: "Update"
+                    width: parent.width * 0.3
                     onClicked: {
                         console.log("payload", recordPayload.text)
                         var arr = recordPayload.text.split(';')
@@ -131,6 +109,7 @@ Page {
                 Button {
                     enabled: isDataSet()
                     text: "Get data"
+                    width: parent.width * 0.3
                     onClicked: {
                         p.getRecordList(dbType.text, dbName.text, dbSchema.text, tableName.text, " ")
                     }
@@ -138,6 +117,7 @@ Page {
                 Button {
                     enabled: isDataSet() && recordId.text.length > 0
                     text: "Get data by Id"
+                    width: parent.width * 0.3
                     onClicked: {
                         p.getRecordById(dbType.text, dbName.text, dbSchema.text, tableName.text, recordId.text)
                     }
@@ -145,6 +125,7 @@ Page {
                 Button {
                     enabled: isDataSet() && recordId.text.length > 0
                     text: "Delete"
+                    width: parent.width * 0.3
                     onClicked: {
                         p.deleteRecord(dbType.text, dbName.text, dbSchema.text, tableName.text, recordId.text)
                     }

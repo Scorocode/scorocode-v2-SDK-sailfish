@@ -60,6 +60,10 @@ public:
      */
     WebSocket* websocket();
 
+    /*!
+     * \brief getToken
+     * \return
+     */
     QString getToken() const { return m_token; }
 
 protected:

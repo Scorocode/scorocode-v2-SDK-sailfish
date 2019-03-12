@@ -15,27 +15,27 @@ public:
     void setToken(const QString &token);
 
     /*!
-     * \brief fileDownload
+     * \brief fileDownload - download file to the '/home/nemo/Downloads' folder
      * \param path
      */
     void fileDownload(const QString &path);
 
     /*!
-     * \brief fileUpload
+     * \brief fileUpload - upload  file to a server
      * \param path
      * \param fileName
      */
     void fileUpload(const QString &path, const QString &fileName);
 
     /*!
-     * \brief fileRename
+     * \brief fileRename - rename file
      * \param path
      * \param fileName
      */
     void fileRename(const QString &path, const QString &fileName);
 
     /*!
-     * \brief fileDelete
+     * \brief fileDelete - delete file from a server
      * \param path
      */
     void fileDelete(const QString &path);

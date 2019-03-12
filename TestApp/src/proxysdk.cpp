@@ -5,7 +5,7 @@
 
 ProxySDK::ProxySDK(QObject *parent) : QObject(parent)
 {
-    sdk = ScorocodeSDK::initApp("2bf61365edc9404abacc602212b4f2fb", m_sslConfig);
+    sdk = ScorocodeSDK::initApp("AppId", m_sslConfig);
     if (sdk)
     {
         init();
@@ -22,7 +22,7 @@ ProxySDK::~ProxySDK()
 
 void ProxySDK::singin()
 {
-    QString user = "anenash@gmail.com";
+    QString user = "email@email.com";
     QString pass = "password";
     qDebug() << "user" << user << "pass" << pass;
     auth->signin(user, pass);
@@ -33,7 +33,7 @@ void ProxySDK::singin()
 
 void ProxySDK::singup()
 {
-    QString user = "anenash@gmail.com";
+    QString user = "email@email.com";
     QString pass = "password";
     qDebug() << "user" << user << "pass" << pass;
     auth->signup(user, pass);

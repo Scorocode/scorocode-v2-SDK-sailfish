@@ -13,27 +13,27 @@ public:
     void setToken(const QString &token);
 
     /*!
-     * \brief folderRead
+     * \brief folderRead - get a folder contend
      * \param path
      */
     void folderRead(const QString &path);
 
     /*!
-     * \brief folderCreate
+     * \brief folderCreate - create a new folder
      * \param path
      * \param token
      */
     void folderCreate(const QString &path);
 
     /*!
-     * \brief folderRename
+     * \brief folderRename - rename a folder
      * \param path
      * \param newFolderName
      */
     void folderRename(const QString &path, const QString &newFolderName);
 
     /*!
-     * \brief folderDelete
+     * \brief folderDelete - delete a folder
      * \param path
      */
     void folderDelete(const QString &path);

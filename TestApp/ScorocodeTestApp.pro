@@ -28,7 +28,6 @@ include(../ScorocodeSDK.pri)
 DISTFILES += qml/ScorocodeTestApp.qml \
     qml/cover/CoverPage.qml \
     qml/pages/FirstPage.qml \
-    qml/pages/SecondPage.qml \
     rpm/ScorocodeTestApp.changes.in \
     rpm/ScorocodeTestApp.changes.run.in \
     rpm/ScorocodeTestApp.spec \
@@ -36,7 +35,8 @@ DISTFILES += qml/ScorocodeTestApp.qml \
     translations/*.ts \
     ScorocodeTestApp.desktop \
     qml/pages/DatabaseCheck.qml \
-    qml/pages/WebSocket.qml
+    qml/pages/WebSocket.qml \
+    qml/pages/Files.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 
@@ -44,13 +44,15 @@ SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 # following CONFIG line
 CONFIG += sailfishapp_i18n
 
+ScorocodeTestApp.depends = ScorocodeSDK
+
 # German translation is enabled as an example. If you aren't
 # planning to localize your app, remember to comment out the
 # following TRANSLATIONS line. And also do not forget to
 # modify the localized app name in the the .desktop file.
 TRANSLATIONS += translations/ScorocodeTestApp-de.ts
 
-unix:!macx: LIBS += -L$$PROJECT_ROOT_PATH/lib/ -lScorocodeSDK
+unix:!macx: LIBS += -L$$PROJECT_ROOT_PATH/lib/
 
 HEADERS += \
     src/proxysdk.h

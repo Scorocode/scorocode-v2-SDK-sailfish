@@ -25,7 +25,7 @@ Page {
             }
             MenuItem {
                 text: qsTr("Files/Folders")
-                onClicked: pageStack.push(Qt.resolvedUrl("SecondPage.qml"), {p: proxy})
+                onClicked: pageStack.push(Qt.resolvedUrl("Files.qml"), {p: proxy})
             }
         }
 

@@ -12,33 +12,33 @@ public:
     explicit Auth(QString baseUrl, QObject *parent = nullptr);
 
     /*!
-     * \brief signin
+     * \brief signin - open new session
      * \param email
      * \param password
      */
     void signin(const QString &email, const QString &password);
 
     /*!
-     * \brief signup
+     * \brief signup - register new user
      * \param email
      * \param password
      */
     void signup(const QString &email, const QString &password);
 
     /*!
-     * \brief signout
+     * \brief signout - close current session
      * \param token
      */
     void signout(const QString &token);
 
     /*!
-     * \brief refreshSession
+     * \brief refreshSession - refresh tocken of session
      * \param token
      */
     void refreshSession(const QString &token);
 
     /*!
-     * \brief getUser
+     * \brief getUser - get user information
      * \param token
      */
     void getUser(const QString &token);
