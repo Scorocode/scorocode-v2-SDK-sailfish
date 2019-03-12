@@ -5,6 +5,11 @@ Database::Database(QString baseUrl, QObject *parent) :
 {
     m_baseUrl = baseUrl + "sc/db/api/v2/";
     m_request = new NetworkRequest();
+
+    connect(m_request, &NetworkRequest::replyDelete, this, &Database::deleteRecordDone);
+    connect(m_request, &NetworkRequest::replyPost, this, &Database::insertRecordDone);
+    connect(m_request, &NetworkRequest::replyPut, this, &Database::updateRecordDone);
+    connect(m_request, &NetworkRequest::replyGet, this, &Database::getRecordDone);
 }
 
 void Database::setToken(const QString &token)
@@ -41,7 +46,6 @@ void Database::getRecordList(const QString &type, const QString &db_name, const 
     {
         QUrl url = m_baseUrl + type + "/" + db_name + "/" + schema + "/" + table;
         m_request->getRequest(url, m_token);
-        connect(m_request, &NetworkRequest::replyGet, this, &Database::getRecordListDone);
     }
 }
 
@@ -72,21 +76,24 @@ void Database::getRecordList(const QString &type, const QString &db_name, const 
         QString path = m_baseUrl + type + "/" + db_name + "/" + schema + "/" + table;
         foreach (auto item, additional)
         {
-            QString attr = item.section(':', 0, 0);
-            QString value = item.section(':', 1, 1);
-            if (item == additional.at(0))
+            if(!item.isEmpty())
             {
-                path += "?";
+                QString attr = item.section(':', 0, 0);
+                QString value = item.section(':', 1, 1);
+                if (item == additional.at(0))
+                {
+                    path += "?";
+                }
+                else
+                {
+                    path += "&";
+                }
+                path += attr + ":" + value;
             }
-            else
-            {
-                path += "&";
-            }
-            path += attr + "=" + value;
         }
         QUrl url = path;
+        qDebug() << "Get data" << url;
         m_request->getRequest(url, m_token);
-        connect(m_request, &NetworkRequest::replyGet, this, &Database::getRecordListDone);
     }
 }
 
@@ -121,7 +128,6 @@ void Database::getRecordById(const QString &type, const QString &db_name, const 
     {
         QUrl url = m_baseUrl + type + "/" + db_name + "/" + schema + "/" + table + "/" + record_id;
         m_request->getRequest(url, m_token);
-        connect(m_request, &NetworkRequest::replyGet, this, &Database::getRecordByIdDone);
     }
 }
 
@@ -158,7 +164,6 @@ void Database::insertRecord(const QString &type, const QString &db_name, const Q
         qDebug() << "payload" << doc.toJson();
         QUrl url = m_baseUrl + type + "/" + db_name + "/" + schema + "/" + table;
         m_request->postRequest(url, doc.toJson(), m_token);
-        connect(m_request, &NetworkRequest::replyPost, this, &Database::insertRecordDone);
     }
 }
 
@@ -200,7 +205,6 @@ void Database::updateRecord(const QString &type, const QString &db_name, const Q
         qDebug() << "payload" << doc.toJson();
         QUrl url = m_baseUrl + type + "/" + db_name + "/" + schema + "/" + table + "/" + record_id;
         m_request->putRequest(url, doc.toJson(), m_token);
-        connect(m_request, &NetworkRequest::replyPut, this, &Database::updateRecordDone);
     }
 }
 
@@ -235,6 +239,5 @@ void Database::deleteRecord(const QString &type, const QString &db_name, const Q
     {
         QUrl url = m_baseUrl + type + "/" + db_name + "/" + schema + "/" + table + "/" + record_id;
         m_request->deleteRequest(url, m_token);
-        connect(m_request, &NetworkRequest::replyDelete, this, &Database::deleteRecordDone);
     }
 }

@@ -109,10 +109,10 @@ Page {
                 }
                 Button {
                     enabled: recordPayload.text.length > 0 && isDataSet()
-                    text: "Insert 1"
+                    text: "Get data 1"
                     onClicked: {
                         console.log("payload", recordPayload.text)
-                        p.insertRecord(dbType.text, dbName.text, dbSchema.text, tableName.text, recordPayload.text)
+                        p.getRecordList(dbType.text, dbName.text, dbSchema.text, tableName.text, recordPayload.text)
                     }
                 }
                 Button {
@@ -120,7 +120,8 @@ Page {
                     text: "Update"
                     onClicked: {
                         console.log("payload", recordPayload.text)
-                        p.updateRecord(dbType.text, dbName.text, dbSchema.text, tableName.text, recordId.text, recordPayload.text)
+                        var arr = recordPayload.text.split(';')
+                        p.updateRecord(dbType.text, dbName.text, dbSchema.text, tableName.text, recordId.text, arr)
                     }
                 }
             }
@@ -131,7 +132,7 @@ Page {
                     enabled: isDataSet()
                     text: "Get data"
                     onClicked: {
-                        p.getRecordList(dbType.text, dbName.text, dbSchema.text, tableName.text)
+                        p.getRecordList(dbType.text, dbName.text, dbSchema.text, tableName.text, " ")
                     }
                 }
                 Button {

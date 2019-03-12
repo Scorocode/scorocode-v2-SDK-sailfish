@@ -4,7 +4,6 @@ message($$PROJECT_ROOT_PATH)
 HEADERS += \
     $$PROJECT_ROOT_PATH/scorocodesdk.h \
     $$PROJECT_ROOT_PATH/Auth/auth.h \
-    $$PROJECT_ROOT_PATH/DataModels/accountuserpublicdata.h \
     $$PROJECT_ROOT_PATH/DB/database.h \
     $$PROJECT_ROOT_PATH/Filesystem/files.h \
     $$PROJECT_ROOT_PATH/Filesystem/folders.h \
@@ -16,7 +15,6 @@ HEADERS += \
 SOURCES += \
     $$PROJECT_ROOT_PATH/scorocodesdk.cpp \
     $$PROJECT_ROOT_PATH/Auth/auth.cpp \
-    $$PROJECT_ROOT_PATH/DataModels/accountuserpublicdata.cpp \
     $$PROJECT_ROOT_PATH/DB/database.cpp \
     $$PROJECT_ROOT_PATH/Filesystem/files.cpp \
     $$PROJECT_ROOT_PATH/Filesystem/folders.cpp \

@@ -11,6 +11,11 @@ Files::Files(QString baseUrl, QObject *parent) :
     m_baseUrl = baseUrl + "sc/fs/api/v2/files/";
     m_request = new NetworkRequest();
     m_fileManager = new FileManager();
+    connect(m_request, &NetworkRequest::replyPut, this, &Files::fileRenameDone);
+    connect(m_request, &NetworkRequest::replyDelete, this, &Files::fileDeleteDone);
+    connect(m_fileManager, &FileManager::updateBytesReceived, this, [](qint64 bytesReceived, qint64 bytesTotal){
+        qDebug() << "Received" << bytesReceived << "from" << bytesTotal;
+    });
 }
 
 void Files::setToken(const QString &token)
@@ -41,8 +46,6 @@ void Files::fileUpload(const QString &path, const QString &fileName)
         qDebug() << "Upload url" << url << "File" << fileName;
 
         m_fileManager->fileUpload(url,path, m_token);
-//        m_request->fileUpload(url, path/*payload.toJson()*/, m_token);
-//        connect(m_request, &NetworkRequest::replyPost, this, &Files::fileUploadDone);
     }
 }
 
@@ -67,7 +70,6 @@ void Files::fileRename(const QString &path, const QString &fileName)
         QJsonDocument payload(tmp);
 
         m_request->putRequest(url, payload.toJson(), m_token);
-        connect(m_request, &NetworkRequest::replyPut, this, &Files::fileRenameDone);
     }
 }
 
@@ -82,9 +84,6 @@ void Files::fileDownload(const QString &path)
     {
         QUrl url = m_baseUrl + path;
         m_fileManager->fileDownload(url, m_token);
-        connect(m_fileManager, &FileManager::updateBytesReceived, this, [](qint64 bytesReceived, qint64 bytesTotal){
-            qDebug() << "Received" << bytesReceived << "from" << bytesTotal;
-        });
     }
 }
 
@@ -100,6 +99,5 @@ void Files::fileDelete(const QString &path)
     {
         QUrl url = m_baseUrl + path;
         m_request->deleteRequest(url, m_token);
-        connect(m_request, &NetworkRequest::replyDelete, this, &Files::fileDeleteDone);
     }
 }

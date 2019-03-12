@@ -34,7 +34,7 @@ public:
     Q_INVOKABLE void deleteDirectory(const QString folderName = ".");
 
 
-    Q_INVOKABLE void getRecordList(const QString &type, const QString &db_name, const QString &schema, const QString &table/*, QVariantMap<QString, QString> additional = nullptr*/);
+    Q_INVOKABLE void getRecordList(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &additional);
     Q_INVOKABLE void getRecordById(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &record_id);
     Q_INVOKABLE void insertRecord(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &payload);
     Q_INVOKABLE void updateRecord(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &record_id, const QString &payload);

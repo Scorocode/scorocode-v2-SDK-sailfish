@@ -34,13 +34,6 @@ ScorocodeSDK::ScorocodeSDK(const QString appId, const QSslConfiguration &configu
         QUrl url = "wss://ws-" + m_appId + ".v2.scorocode.ru";
 //        QUrl url = QString::fromLatin1("wss://echo.websocket.org");
         m_socket = new WebSocket(url);
-
-        connect(m_socket, &WebSocket::socketConnected, [](QJsonDocument message){
-            qDebug().noquote() << "Connected" << message.toJson();
-        });
-        connect(m_socket, &WebSocket::messageReceived, [](QJsonDocument message){
-            qDebug().noquote() << "Message" << message.toJson();
-        });
     }
 }
 

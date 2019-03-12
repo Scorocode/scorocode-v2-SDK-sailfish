@@ -2,7 +2,7 @@
 
 #include <QObject>
 
-#include "../Utils/networkrequest.h"
+#include "Utils/networkrequest.h"
 
 class Database : public QObject
 {
@@ -84,8 +84,7 @@ public:
     };
 
 signals:
-    void getRecordListDone(int errorCode, QJsonDocument data);
-    void getRecordByIdDone(int errorCode, QJsonDocument data);
+    void getRecordDone(int errorCode, QJsonDocument data);
     void insertRecordDone(int errorCode, QJsonDocument data);
     void updateRecordDone(int errorCode, QJsonDocument data);
     void deleteRecordDone(int errorCode, QJsonDocument data);

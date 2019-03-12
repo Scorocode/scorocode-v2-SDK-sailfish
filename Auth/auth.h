@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QJsonDocument>
 
-#include "../Utils/networkrequest.h"
+#include "Utils/networkrequest.h"
 
 class Auth : public QObject
 {

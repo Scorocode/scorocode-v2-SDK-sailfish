@@ -23,14 +23,14 @@ public:
     /*!
      * \brief fileUpload
      * \param path
-     * \param payload
+     * \param fileName
      */
     void fileUpload(const QString &path, const QString &fileName);
 
     /*!
      * \brief fileRename
      * \param path
-     * \param payload
+     * \param fileName
      */
     void fileRename(const QString &path, const QString &fileName);
 

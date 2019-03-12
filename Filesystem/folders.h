@@ -2,7 +2,7 @@
 
 #include <QObject>
 
-#include "../Utils/networkrequest.h"
+#include "Utils/networkrequest.h"
 
 class Folders : public QObject
 {
@@ -28,7 +28,7 @@ public:
     /*!
      * \brief folderRename
      * \param path
-     * \param payload
+     * \param newFolderName
      */
     void folderRename(const QString &path, const QString &newFolderName);
 
