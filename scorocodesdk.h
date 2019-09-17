@@ -22,13 +22,15 @@ private:
     static ScorocodeSDK *m_instance;
 
 public:
+
     /*!
      * \brief initApp
      * \param appId
      * \param configuration
+     * \param address
      * \return
      */
-    static ScorocodeSDK* initApp(const QString &appId, const QSslConfiguration &configuration);
+    static ScorocodeSDK* initApp(const QString &appId, const QSslConfiguration &configuration, const QString address = ".v2.scorocode.ru");
 
     /*!
      * \brief auth
@@ -72,6 +74,7 @@ protected:
 private:
     ScorocodeSDK();
     ScorocodeSDK(const QString appId, const QSslConfiguration &configuration);
+    ScorocodeSDK(const QString appId, const QSslConfiguration &configuration, const QString address = ".v2.scorocode.ru");
     ScorocodeSDK(const ScorocodeSDK &&) = delete;
     ScorocodeSDK& operator =(ScorocodeSDK &) = delete;
     ScorocodeSDK& operator =(ScorocodeSDK &&) = delete;

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" name="ApplicationStates" qt:editorversion="4.8.1" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" initial="Sing in">
+    <qt:editorinfo initialGeometry="350.93;98.22;-20;-20;40;40"/>
+    <state id="Sing in">
+        <qt:editorinfo geometry="350.93;286.48;-60;-50;120;100" scenegeometry="350.93;286.48;290.93;236.48;120;100"/>
+        <transition type="external" event="Registration" target="Sing up"/>
+        <transition type="external" event="View list of tasks" target="Tasks list"/>
+    </state>
+    <state id="Sing up">
+        <qt:editorinfo geometry="641.52;286.48;-60;-50;120;100" scenegeometry="641.52;286.48;581.52;236.48;120;100"/>
+        <transition type="external" event="Success registration" target="Tasks list"/>
+    </state>
+    <state id="Tasks list">
+        <qt:editorinfo geometry="350.93;486;-60;-50;120;100" scenegeometry="350.93;486;290.93;436;120;100"/>
+        <transition type="external" event="Create/edit a task" target="Task item"/>
+        <transition type="external" event="Exit" target="Final_1"/>
+    </state>
+    <state id="Task item">
+        <qt:editorinfo geometry="641.52;486;-60;-50;120;100" scenegeometry="641.52;486;581.52;436;120;100"/>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo geometry="350.93;654.82;-20;-20;40;40" scenegeometry="350.93;654.82;330.93;634.82;40;40"/>
+    </final>
+</scxml>

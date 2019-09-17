@@ -32,7 +32,7 @@ public:
     void signout(const QString &token);
 
     /*!
-     * \brief refreshSession - refresh tocken of session
+     * \brief refreshSession - refresh token of session
      * \param token
      */
     void refreshSession(const QString &token);

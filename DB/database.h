@@ -84,16 +84,18 @@ public:
     };
 
 signals:
-    void getRecordDone(int errorCode, QJsonDocument data);
-    void insertRecordDone(int errorCode, QJsonDocument data);
-    void updateRecordDone(int errorCode, QJsonDocument data);
-    void deleteRecordDone(int errorCode, QJsonDocument data);
+    void getRecordDone(int errorCode, QJsonDocument data, QString tableName);
+    void insertRecordDone(int errorCode, QJsonDocument data, QString tableName);
+    void updateRecordDone(int errorCode, QJsonDocument data, QString tableName);
+    void deleteRecordDone(int errorCode, QJsonDocument data, QString tableName);
     void DbRequestError(Database::DatabaseError errorCode);
 
 private:
     QString m_baseUrl;
     NetworkRequest *m_request;
     QString m_token;
+
+    QString m_tableName;
 };
 
 // DATABASE_H

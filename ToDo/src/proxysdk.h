@@ -9,6 +9,7 @@ class ProxySDK : public QObject
     Q_OBJECT
 
     Q_PROPERTY(bool singing READ singing NOTIFY singingChanged)
+    Q_PROPERTY(QString user READ user NOTIFY userChanged)
     Q_PROPERTY(QString token READ getToken NOTIFY tokenChanged)
     Q_PROPERTY(QString directoryPath READ directoryPath WRITE setDirectoryPath NOTIFY directoryPathChanged)
     Q_PROPERTY(QString websocketMessage READ websocketMessage NOTIFY websocketMessageChanged)
@@ -17,8 +18,8 @@ public:
     explicit ProxySDK(QObject *parent = nullptr);
     ~ProxySDK();
 
-    Q_INVOKABLE void singin();
-    Q_INVOKABLE void singup();
+    Q_INVOKABLE void singin(const QString &user, const QString &password);
+    Q_INVOKABLE void singup(const QString &user, const QString &password);
     Q_INVOKABLE void singout();
     Q_INVOKABLE void getUserInfo();
 
@@ -34,7 +35,7 @@ public:
     Q_INVOKABLE void deleteDirectory(const QString folderName = ".");
 
 
-    Q_INVOKABLE void getRecordList(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &additional);
+    Q_INVOKABLE void getRecordList(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &additional = " ");
     Q_INVOKABLE void getRecordById(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &record_id);
     Q_INVOKABLE void insertRecord(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &payload);
     Q_INVOKABLE void updateRecord(const QString &type, const QString &db_name, const QString &schema, const QString &table, const QString &record_id, const QString &payload);
@@ -51,17 +52,25 @@ public:
 //    QString filePath() { return m_filePath; }
     QString directoryPath() { return m_directoryPath; }
     QString websocketMessage() { return m_websocketMessage; }
+    QString user() { return m_user; }
 
 signals:
-//    void singinDone(int errorCode, QString data);
+    void singinSuccefull(bool status);
+    void singupSuccefull(bool status, QString data = "");
     void singingChanged(bool singing);
+    void authError(int errCode);
     void tokenChanged(QString data);
+    void tokenExpired();
     void directoryPathChanged(QString data);
     void websocketMessageChanged(QString data);
+    void getRecordListDone(QString data, QString tableName);
+    void insertRecordDone(QString data, QString tableName);
+    void updateRecordDone(QString data, QString tableName);
+    void userChanged(QString user);
 
 private slots:
     void singinDone(int errorCode, QJsonDocument data);
-//    void foldersList(int errorCode, QJsonDocument data);
+    void singupDone(int errorCode, QJsonDocument data);
 
 private:
     void init();
@@ -82,6 +91,12 @@ private:
     QString m_websocketMessage;
 
     bool m_singing = false;
+
+    QString m_user;
+
+    QString databaseType = "pg";
+    QString databaseName = "scorocodetodo";
+    QString databaseSchema = "public";
 };
 
 #endif // PROXYSDK_H
