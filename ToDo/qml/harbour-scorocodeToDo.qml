@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import Nemo.Notifications 1.0
 
 import "pages"
 
@@ -10,6 +11,7 @@ ApplicationWindow
     id: app
 
     property alias sdk: scorocode
+    property alias notification: notificationItem
 
     initialPage: Component { StartPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
@@ -18,5 +20,13 @@ ApplicationWindow
     //Create scorocode sdk item
     ScorocodeSDK {
         id: scorocode
+    }
+
+    Notification {
+        id: notificationItem
+
+        summary: "Scorocode notification"
+        body: "Notification body"
+        expireTimeout: 10000
     }
 }

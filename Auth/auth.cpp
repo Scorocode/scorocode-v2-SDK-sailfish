@@ -27,7 +27,7 @@ void Auth::signin(const QString &email, const QString &password)
         emit authError(Auth::AuthError::PasswordIsEmpty);
         return;
     }
-    qDebug() << "email" << email << "pass" << password;
+    qDebug() << "email" << email;
 
     QRegExp mailREX("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b");
     mailREX.setCaseSensitivity(Qt::CaseInsensitive);

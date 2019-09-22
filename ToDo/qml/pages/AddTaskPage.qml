@@ -178,6 +178,8 @@ Dialog {
         }
 
         ListView {
+            anchors.left: parent.left
+            anchors.leftMargin: Theme.horizontalPageMargin
             height: Theme.itemSizeHuge * 3
             width: parent.width
             visible: attachmentsModel.count > 0
@@ -187,6 +189,8 @@ Dialog {
 
                 height: Theme.itemSizeSmall
                 width: parent.width
+                anchors.left: parent.left
+                anchors.leftMargin: Theme.horizontalPageMargin
                 ListView.onRemove: animateRemoval(listItem)
 
                 function remove() {
@@ -234,6 +238,7 @@ Dialog {
             id: usersList
 
             anchors.fill: parent
+            anchors.leftMargin: Theme.horizontalPageMargin
             clip: true
             model: usersModel
             delegate: ListItem {

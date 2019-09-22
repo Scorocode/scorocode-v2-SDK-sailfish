@@ -25,7 +25,7 @@
     </message>
     <message>
         <source>Executor&apos;s name</source>
-        <translation type="unfinished">Назначить на </translation>
+        <translation>Назначить на </translation>
     </message>
     <message>
         <source>Name</source>
@@ -178,6 +178,10 @@
     <message>
         <source>Download</source>
         <translation>Загрузить</translation>
+    </message>
+    <message>
+        <source>Task is not finished</source>
+        <translation> Задача не закончена</translation>
     </message>
 </context>
 </TS>

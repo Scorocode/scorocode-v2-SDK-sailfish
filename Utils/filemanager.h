@@ -13,7 +13,7 @@ class FileManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit FileManager(QObject *parent = nullptr);
+    explicit FileManager(QObject *parent = nullptr, const QString defaultFilePath = "/home/nemo/Downloads/");
 
     void fileUpload(const QUrl url, const QString &fileName, const QString &token = nullptr);
     void fileDownload(const QUrl url, const QString &token = nullptr);
@@ -33,7 +33,7 @@ private:
     QString createFilePath(const QUrl &url);
 
 private:
-    QString m_downloads = "/home/nemo/Downloads/";
+    QString m_downloads; // = "/home/nemo/Downloads/";
     QNetworkAccessManager *m_manager;
     QNetworkReply*  m_currentReply {nullptr};
     QFile*          m_file         {nullptr};

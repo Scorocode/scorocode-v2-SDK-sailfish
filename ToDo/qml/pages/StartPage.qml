@@ -1,6 +1,5 @@
 import QtQuick 2.4
 import Sailfish.Silica 1.0
-import Nemo.Notifications 1.0
 
 Page {
     id: page
@@ -13,16 +12,12 @@ Page {
         onSinginSuccefull: {
             if (status) {
                 pageStack.replace(Qt.resolvedUrl("TasksListPage.qml"))
-            } else {
-                notification.publish()
             }
         }        
 
         onSingupSuccefull: {
             if (status) {
                 console.log(data)
-//                var record = "{" + '"userName":' + '"' + data + '"' + ', "email":"' + data + '"'  + "}"
-//                app.sdk.insertRecord("pg", "scorocodetodo", "public", "users", record)
             }
         }
 
@@ -34,14 +29,6 @@ Page {
             panel.show()
         }
 
-    }
-
-    Notification {
-        id: notification
-
-        summary: "Notification summary"
-        body: "Notification body"
-        onClicked: console.log("Clicked")
     }
 
     // To enable PullDownMenu, place our content in a SilicaFlickable

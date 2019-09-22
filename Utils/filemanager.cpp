@@ -2,8 +2,9 @@
 #include <QFileInfo>
 #include <QMimeDatabase>
 
-FileManager::FileManager(QObject *parent) : QObject(parent)
+FileManager::FileManager(QObject *parent, const QString defaultFilePath) : QObject(parent)
 {
+    m_downloads = defaultFilePath;
     m_manager = new QNetworkAccessManager(this);
     connect(m_manager, &QNetworkAccessManager::finished, this, &FileManager::onDownloadFinished);
 }
@@ -20,12 +21,9 @@ void FileManager::fileUpload(const QUrl url, const QString &fileName, const QStr
         request.setRawHeader("Authorization", t.toUtf8());
     }
 
-    QMimeDatabase db;
-    QMimeType type = db.mimeTypeForFile(fileName);
-    qDebug() << "Mime type:" << type.name();
     m_file = new QFile(fileName);
-    qDebug() << "Open file" << m_file->open(QIODevice::ReadOnly);
-    qDebug() << "file size:" << m_file->size();
+    m_file->open(QIODevice::ReadOnly);
+    m_file->size();
 
     QByteArray postData;
     //create a header that the server can recognize

@@ -179,5 +179,9 @@
         <source>Download</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Task is not finished</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

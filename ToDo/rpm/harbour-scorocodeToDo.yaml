@@ -1,7 +1,7 @@
-Name: harbour-scorocodeToDo
+Name: harbour-scorocodetodo
 Summary: Scorocode API test applicatipn
 Version: 0.1
-Release: 15
+Release: 20
 # The contents of the Group field should be one of the groups listed here:
 # https://github.com/mer-tools/spectacle/blob/master/data/GROUPS
 Group: Qt/Qt
@@ -30,8 +30,7 @@ PkgConfigBR:
 
 # Runtime dependencies which are not automatically detected
 Requires:
-  - sailfishsilica-qt5 >= 0.10.9 
-#  - qt5-websockets
+  - sailfishsilica-qt5 >= 0.10.9
 
 # All installed files
 Files:

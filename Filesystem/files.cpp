@@ -5,12 +5,12 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
-Files::Files(QString baseUrl, QObject *parent) :
+Files::Files(QString baseUrl, const QString defaultFilePath, QObject *parent) :
     QObject(parent)
 {
     m_baseUrl = baseUrl + "sc/fs/api/v2/files/";
     m_request = new NetworkRequest();
-    m_fileManager = new FileManager();
+    m_fileManager = new FileManager(this, defaultFilePath);
     connect(m_request, &NetworkRequest::replyPut, this, &Files::fileRenameDone);
     connect(m_request, &NetworkRequest::replyDelete, this, &Files::fileDeleteDone);
     connect(m_fileManager, &FileManager::updateBytesReceived, this, [](qint64 bytesReceived, qint64 bytesTotal){

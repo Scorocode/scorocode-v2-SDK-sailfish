@@ -32,6 +32,12 @@ Page {
                                           "status": items[i].taskStatus,
                                           "attachments": items[i].attachId
                                       })
+                    var deadLine = new Date(items[i].deadline)
+                    var currDate = new Date()
+                    if(currDate > deadLine && items[i].taskStatus !== 4) {
+                        app.notification.body = items[i].taskTitle + qsTr("Task is not finished")
+                        app.notification.publish()
+                    }
                 }
             } else if (tableName === "attachments") {
                 var attachmentsItems = JSON.parse(data).items
@@ -43,6 +49,12 @@ Page {
                 }
             }
         }
+    }
+
+    Connections {
+        target: app.notification
+
+        onClicked: console.log("Task page Clicked")
     }
 
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
@@ -74,6 +86,14 @@ Page {
                                    "executor": rowData.executor,
                                    "status": rowData.status
                                })
+                var deadLine = new Date(rowData.deadLine)
+                var currDate = new Date()
+                console.log(deadLine, "currDate", currDate)
+                if((currDate > deadLine) === 1 && rowData.status !== 4) {
+                    console.log("Set notification")
+                    app.notification.body = rowData.title + qsTr("Task is not finished")
+                    app.notification.publish()
+                }
             }
         }
 
@@ -176,9 +196,15 @@ Page {
                                 + '", "taskDescription":"' + rowData.description
                                 + '", "userName":"' + rowData.executor
                                 + '", "attachId":"' + rowData.attachId
-                                + '", "deadline":"' + rowData.deadLine + '"'  + "}"
+                                + '", "deadline":"' + rowData.deadLine
+                                + '", "taskStatus":"' + rowData.status + '"'  + "}"
                         app.sdk.updateRecord("pg", "scorocodetodo", "public", "tasks", rowData.taskId, record.toString())
                     })
+                }
+
+                function getColor(status) {
+                    var statusColor = ["white", "green", "red", "gray", "gray"]
+                    return statusColor[status]
                 }
 
                 Label {
@@ -201,11 +227,23 @@ Page {
                 Label {
 
                     anchors.top: label.bottom
-                    anchors.right: parent.right
+                    anchors.right: taskStatusIndicator.left
                     anchors.rightMargin: Theme.horizontalPageMargin
                     text: executor
                     font.pixelSize: Theme.fontSizeSmall
                     color: listItem.highlighted ? Theme.highlightColor : Theme.secondaryColor
+                }
+
+                Rectangle {
+                    id: taskStatusIndicator
+
+                    anchors.right: parent.right
+                    anchors.rightMargin: Theme.horizontalPageMargin
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: parent.height * 0.9
+                    width: 5 * Theme.pixelRatio
+
+                    color: getColor(status)
                 }
 
                 Separator {

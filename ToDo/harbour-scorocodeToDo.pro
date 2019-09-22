@@ -10,7 +10,7 @@
 #   - translation filenames have to be changed
 
 # The name of your application
-TARGET = harbour-scorocodeToDo
+TARGET = harbour-scorocodetodo
 
 CONFIG += sailfishapp
 QT += websockets
@@ -24,18 +24,18 @@ PROJECT_ROOT_PATH = $${_PRO_FILE_PWD_}/../
 
 include(../ScorocodeSDK.pri)
 
-DISTFILES += qml/harbour-scorocodeToDo.qml \
+DISTFILES += qml/harbour-scorocodetodo.qml \
     qml/cover/CoverPage.qml \
     rpm/harbour-scorocodeToDo.changes.in \
     rpm/harbour-scorocodeToDo.changes.run.in \
     rpm/harbour-scorocodeToDo.spec \
     rpm/harbour-scorocodeToDo.yaml \
     translations/*.ts \
-    harbour-scorocodeToDo.desktop \
     qml/pages/RegisterPage.qml \
     qml/pages/TasksListPage.qml \
     qml/pages/AddTaskPage.qml \
-    qml/pages/StartPage.qml
+    qml/pages/StartPage.qml \
+    harbour-scorocodetodo.desktop
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 

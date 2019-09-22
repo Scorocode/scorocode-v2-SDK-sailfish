@@ -28,11 +28,9 @@ ScorocodeSDK::ScorocodeSDK(const QString appId, const QSslConfiguration &configu
     m_sslConfiguration = new QSslConfiguration(configuration);
 
     m_baseUrl += m_appId + ".v2.scorocode.ru/";
-//    m_baseUrl += m_appId + ".t8.scorocode.ru/";
     if (!m_socket)
     {
         QUrl url = "wss://ws-" + m_appId + ".v2.scorocode.ru";
-//        QUrl url = "wss://ws-" + m_appId + ".t8.scorocode.ru";
         m_socket = new WebSocket(url);
     }
 }
@@ -45,11 +43,9 @@ ScorocodeSDK::ScorocodeSDK(const QString appId, const QSslConfiguration &configu
 
     m_sslConfiguration = new QSslConfiguration(configuration);
 
-//    m_baseUrl += m_appId + ".v2.scorocode.ru/";
     m_baseUrl += m_appId + address + "/";
     if (!m_socket)
     {
-//        QUrl url = "wss://ws-" + m_appId + ".v2.scorocode.ru";
         QUrl url = "wss://ws-" + m_appId + address;
         m_socket = new WebSocket(url);
     }

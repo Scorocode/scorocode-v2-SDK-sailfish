@@ -10,7 +10,7 @@ class Files : public QObject
 {
     Q_OBJECT
 public:
-    explicit Files(QString baseUrl, QObject *parent = nullptr);
+    explicit Files(QString baseUrl, const QString defaultFilePath = "/home/nemo/Downloads/", QObject *parent = nullptr);
 
     void setToken(const QString &token);
 
