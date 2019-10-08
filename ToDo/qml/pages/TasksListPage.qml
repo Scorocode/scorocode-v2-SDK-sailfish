@@ -19,7 +19,6 @@ Page {
         }
 
         onGetRecordListDone: {
-            console.log(data, JSON.stringify(data))
             if (tableName === "tasks") {
                 busyIndicator.running = false
                 var items = JSON.parse(data).items
@@ -79,7 +78,6 @@ Page {
 
 
             function rowEdit(rowIndex, rowData) {
-                console.log("Edit data for row", rowIndex)
                 tasksModel.set(rowIndex, {"task": rowData.title,
                                    "taskDate": rowData.deadLine,
                                    "taskDesciption": rowData.description,
@@ -88,9 +86,7 @@ Page {
                                })
                 var deadLine = new Date(rowData.deadLine)
                 var currDate = new Date()
-                console.log(deadLine, "currDate", currDate)
                 if((currDate > deadLine) === 1 && rowData.status !== 4) {
-                    console.log("Set notification")
                     app.notification.body = rowData.title + qsTr("Task is not finished")
                     app.notification.publish()
                 }
@@ -113,7 +109,6 @@ Page {
                     var dialog = pageStack.push(Qt.resolvedUrl("AddTaskPage.qml"),
                                                 {"name": header.title})
                     dialog.accepted.connect(function() {
-                        console.log("Dialog result", JSON.stringify(dialog.taskItem))
                         if(dialog.taskItem){
                             var rowData = dialog.taskItem
                             var record = "{"
@@ -162,8 +157,9 @@ Page {
                 anchors.margins: Theme.horizontalPageMargin
                 menu: contextMenu
                 width: parent.width
-                contentHeight: Theme.itemSizeLarge // three line delegate
                 ListView.onRemove: animateRemoval(listItem)
+                state: "closed"
+
 
                 function remove() {
                     remorseAction("Deleting", function() {
@@ -225,6 +221,7 @@ Page {
                     color: listItem.highlighted ? Theme.highlightColor : Theme.secondaryColor
                 }
                 Label {
+                    id: executorName
 
                     anchors.top: label.bottom
                     anchors.right: taskStatusIndicator.left
@@ -246,6 +243,70 @@ Page {
                     color: getColor(status)
                 }
 
+                Item {
+                    id: additionalInfo
+
+                    anchors.top: executorName.bottom
+                    anchors.left: parent.left
+                    anchors.leftMargin: Theme.horizontalPageMargin
+                    anchors.right: taskStatusIndicator.left
+                    anchors.rightMargin: Theme.horizontalPageMargin
+
+                    height: 0
+
+
+                    TextArea {
+                        id: descriptionText
+
+                        anchors.margins: Theme.horizontalPageMargin
+                        height: Theme.itemSizeMedium
+                        width: parent.width
+                        readOnly: true
+                        wrapMode: Text.WordWrap
+                        horizontalAlignment: Text.AlignJustify
+                        visible: additionalInfo.visible
+                    }
+
+                    ListView {
+                        id: attachmnetsView
+
+                        anchors.top: descriptionText.bottom
+                        anchors.bottom: additionalInfo.bottom
+                        anchors.left: additionalInfo.left
+                        anchors.leftMargin: Theme.horizontalPageMargin
+                        width: parent.width
+                        height: Theme.itemSizeMedium
+                        visible: additionalInfo.visible && attachmentsModel.count > 0
+                        model: attachmentsModel
+                        delegate: ListItem {
+                            contentHeight: Theme.itemSizeExtraSmall
+                            width: parent.width
+                            Label {
+                                anchors.left: parent.left
+                                anchors.margins: Theme.horizontalPageMargin
+                                width: parent.width
+                                wrapMode: Text.WordWrap
+                                horizontalAlignment: Text.AlignJustify
+                                verticalAlignment: "AlignVCenter"
+                                text: fileName
+                            }
+                            Separator {
+                                anchors.bottom: parent.bottom
+                                width: parent.width
+                            }
+                            menu: ContextMenu {
+                                MenuItem {
+                                    text:  qsTr("Download")
+
+                                    onClicked: {
+                                        app.sdk.downloadFile(fileURL)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 Separator {
                     anchors.bottom: parent.bottom
                     width: parent.width
@@ -257,9 +318,7 @@ Page {
                         MenuItem {
                             text: qsTr("Edit")
                             onClicked: {
-                                console.log("Edit", index)
                                 attachmentsModel.clear()
-                                panel.hide()
                                 rowEdit()
                             }
                         }
@@ -271,12 +330,42 @@ Page {
                 }
 
                 onClicked: {
+                    listItem.state == 'expanded' ? listItem.state = 'closed' : listItem.state = 'expanded'
+
                     attachmentsModel.clear()
-                    var filter = "filter=attachId:" + attachments + ";"
-                    app.sdk.getRecordList("pg", "scorocodetodo", "public", "attachments", filter)
-                    descriptionText.text = taskDesciption
-                    panel.open = true
+                    if(listItem.state == 'expanded') {
+                        var filter = "filter=attachId:" + attachments + ";"
+                        app.sdk.getRecordList("pg", "scorocodetodo", "public", "attachments", filter)
+                        descriptionText.text = taskDesciption
+                    }
                 }
+
+                states: [
+                    State {
+                        name: "expanded"
+                        PropertyChanges {
+                            target: additionalInfo
+                            height: Theme.itemSizeMedium + Theme.itemSizeMedium
+                            visible: true
+                        }
+                        PropertyChanges {
+                            target: listItem
+                            contentHeight: Theme.itemSizeHuge + Theme.itemSizeExtraLarge
+                        }
+                    },
+                    State {
+                        name: "closed"
+                        PropertyChanges {
+                            target: listItem
+                            contentHeight: Theme.itemSizeLarge
+                        }
+                        PropertyChanges {
+                            target: additionalInfo
+                            height: 0
+                            visible: false
+                        }
+                    }
+                ]
             }
         }
 
@@ -297,70 +386,5 @@ Page {
                 hintText: qsTr("Please, pull menu and add new task")
             }
         }
-    }
-
-    DockedPanel {
-        id: panel
-
-        width: parent.width
-        height: Theme.itemSizeExtraLarge * 2 + Theme.paddingLarge
-
-        dock: Dock.Bottom
-        MouseArea {
-            anchors.fill: parent
-
-            onClicked: {
-                panel.open = false
-            }
-        }
-        TextArea {
-            id: descriptionText
-
-            anchors.margins: Theme.horizontalPageMargin
-            width: parent.width
-            readOnly: true
-            wrapMode: Text.WordWrap
-            horizontalAlignment: Text.AlignJustify
-        }
-
-        ListView {
-            id: attachmnetsView
-
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.margins: Theme.horizontalPageMargin
-            width: parent.width
-            height: Theme.itemSizeExtraLarge
-            visible: attachmentsModel.count > 0
-            model: attachmentsModel
-            delegate: ListItem {
-                height: Theme.itemSizeExtraSmall
-                width: parent.width
-                Label {
-                    anchors.left: parent.left
-                    anchors.margins: Theme.horizontalPageMargin
-                    width: parent.width
-                    wrapMode: Text.WordWrap
-                    horizontalAlignment: Text.AlignJustify
-                    verticalAlignment: "AlignVCenter"
-                    text: fileName
-                }
-                Separator {
-                    anchors.bottom: parent.bottom
-                    width: parent.width
-                }
-                menu: ContextMenu {
-                    MenuItem {
-                        text:  qsTr("Download")
-
-                        onClicked: {
-                            app.sdk.downloadFile(fileURL)
-                        }
-                    }
-                }
-            }
-        }
-
-
     }
 }

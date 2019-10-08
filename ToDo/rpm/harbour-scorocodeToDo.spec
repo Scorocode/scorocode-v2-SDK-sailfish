@@ -10,7 +10,7 @@ Name:       harbour-scorocodetodo
 
 Summary:    Scorocode API test applicatipn
 Version:    0.1
-Release:    20
+Release:    25
 Group:      Qt/Qt
 License:    LICENSE
 URL:        http://example.org/

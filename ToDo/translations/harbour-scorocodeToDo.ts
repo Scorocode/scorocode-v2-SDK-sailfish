@@ -113,10 +113,6 @@
 <context>
     <name>StartPage</name>
     <message>
-        <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Register</source>
         <translation type="unfinished"></translation>
     </message>

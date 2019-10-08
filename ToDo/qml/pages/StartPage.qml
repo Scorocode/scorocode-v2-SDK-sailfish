@@ -12,12 +12,16 @@ Page {
         onSinginSuccefull: {
             if (status) {
                 pageStack.replace(Qt.resolvedUrl("TasksListPage.qml"))
+            } else {
+                panel.show()
             }
         }        
 
         onSingupSuccefull: {
             if (status) {
                 console.log(data)
+            } else {
+                panel.show()
             }
         }
 
@@ -37,10 +41,6 @@ Page {
 
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
         PullDownMenu {
-            MenuItem {
-                text: qsTr("About")
-                onClicked: pageStack.push(Qt.resolvedUrl("TasksListPage.qml"))
-            }
             MenuItem {
                 text: qsTr("Register")
                 onClicked: pageStack.push(Qt.resolvedUrl("RegisterPage.qml"))
@@ -74,7 +74,7 @@ Page {
                 width: parent.width
                 placeholderText: qsTr("Email")
             }
-            TextField {
+            PasswordField {
                 id: passwordId
 
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -87,12 +87,12 @@ Page {
                 id: loginButton
 
                 anchors.horizontalCenter: parent.horizontalCenter
+                visible: !busyIndicator.running
                 text: qsTr("Sign in")
+                enabled: emailId.text.length > 0 && passwordId.text.length > 0
 
                 onClicked: {
-//                    scorocode.singin(emailId.text, passwordId.text)
                     app.sdk.singin(emailId.text, passwordId.text)
-                    //pageStack.replace(Qt.resolvedUrl("TasksListPage.qml"))
                 }
             }
         }
